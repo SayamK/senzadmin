@@ -1,0 +1,55 @@
+extends layout
+
+block page
+  - var menu = 'admin'
+block content
+  div
+    include includes/menu
+
+  div= error
+  div.admin
+    if (users.length === 0 )
+
+        | Nothing to display. No users are registered in the system
+    else
+        - var prepopulate = []
+        each user, index in users
+            - prepopulate.push(user.name)
+
+        #container
+            ul
+                li(data-jstree='{ "selected" : true, "opened" : true , "icon" : "glyphicon glyphicon-flash"}') SENZ SWITCH
+                    each user in users
+                        ul
+                            li(data-jstree='{"icon" : "glyphicon glyphicon-user"}')
+                                | #{user.name}
+
+
+                                ul
+                                    each attr, index in user
+                                        if (index !== "pubkey" && index !== "senze" && index !== "signature" && index !== "_id" && index !== "name" && index !== "phone" )
+                                            - var nash = 0
+                                            each j in prepopulate
+
+                                                if (index == j)
+                                                    - nash  = 1
+                                            if (nash == 0)
+                                                li(data-jstree='{"icon" : "glyphicon glyphicon-signal"}')
+                                                    | #{index}
+                                                    ul
+                                                        each val in attr
+                                                            li(data-jstree='{"icon" : "glyphicon glyphicon-user"}')
+                                                                | #{val}
+
+
+
+
+
+
+        script.
+            $(function () {
+                $('#container').jstree();
+            });
+
+
+
